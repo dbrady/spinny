@@ -11,16 +11,23 @@ class Controller
     @points = []
 
     @angle = 0
-    @angle_vel = 0.01
+    @angle_vel = 0.5 # radians / sec
     @targets = []
     @cx, @cy = @screen.width/2, @screen.height/2
     @center = @cx, @cy
     @hotline = 0
+    @hotline_decay = 250 # color / sec
+    @last_frame_time = nil
+    @this_frame_time = nil
+    @frame_time = 0
   end
   
   def run
     puts "Beginning controller run event"
+    @last_frame_time ||= Time.now
     loop do
+      @this_frame_time = Time.now
+      @frame_time = @this_frame_time - @last_frame_time
       @queue.each do |ev|
         case ev
         when QuitEvent
@@ -42,12 +49,13 @@ class Controller
       move_targets
       draw_scene
       @clock.tick
+      @last_frame_time = @this_frame_time
     end
     puts "Finished controller run event"
   end
   
   def move_targets
-    @angle += @angle_vel
+    @angle += @frame_time * @angle_vel
     @points = @targets.map {|t| [@cx + t.dist * Math.cos(@angle + t.angle), @cy + t.dist * Math.sin(@angle + t.angle)]}
   end
   
@@ -59,7 +67,7 @@ class Controller
       end
     end
     # highlight last point
-    @hotline = [@hotline-5,0].max
+    @hotline = [@hotline-@frame_time * @hotline_decay,0].max
     @points.each do |pt|
       @screen.draw_line_a pt, @points[-1], [255,@hotline,255, 2] unless pt==@points[-1]
     end
