@@ -60,7 +60,7 @@ class Controller
   end
   
   def draw_scene
-    @screen.fill [0,0,0]
+    @screen.fill [0,32,0]
     @points.each do |a|
       @points.each do |b|
         @screen.draw_line_a a, b, [255,0,255, 2] unless a==b
