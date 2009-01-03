@@ -33,6 +33,9 @@ Other stuff:
 
 = Installation
 
+To run spinny, just run spinny.rb. But first, you need Rubygame. These
+instructions detail how to set that up.
+
 On MacOSX:
 
 Condensed from http://rubygame.sourceforge.net/doc/2_2_0/files/doc/macosx_install_rdoc.html
